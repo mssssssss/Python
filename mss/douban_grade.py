@@ -2,8 +2,8 @@ from urllib import request
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
 
+# 获取数据
 def get_data(i):
-    # bytes(i)
     url="https://movie.douban.com/top250?start="+str(i)
     headers = {
         # 'User­Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:73.0) Gecko/20100101 Firefox/73.0'
@@ -13,11 +13,11 @@ def get_data(i):
     response = request.urlopen(req)
     if response.getcode() == 200:
         data = response.read()
-
         data = str(data, encoding='utf-8')
         with open('douban.html', mode='w', encoding='utf-8') as f:
             f.write(data)
 
+# 处理数据
 def handle_data(i):
     get_data(i)
     with open('douban.html', mode='r', encoding='utf-8') as f:
@@ -37,17 +37,15 @@ def handle_data(i):
         'mov_name':movie_name,
         'info':info,
         'score':score,
-        # 'year':year
         }
         result.append(row)
     return result
 
+# 保存数据
 def save_data(data):
-
     for item in data:
         row = [item['num'], item['mov_name'], item['info'], item['score']]
         sheet.append(row)
-
     # 保存工作蒲
     wb.save('豆瓣评分排行榜.xlsx')
 
